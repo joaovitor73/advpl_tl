@@ -1,0 +1,38 @@
+#Include 'Totvs.ch'
+#Include 'Restful.ch'
+
+// 1. Definição da Estrutura
+WSRESTFUL produtos DESCRIPTION "API de Produtos Morada"
+    WSMETHOD GET DESCRIPTION "Listar todos os produtos" WSSYNTAX "/produtos"
+END WSRESTFUL
+
+// 2. Implementação da Lógica
+WSMETHOD GET WSRECEIVE NULLPARAM WSREST produtos
+    Local oJson := JsonObject():New()
+    Local aProd := {}
+    Local oItem
+    
+    ::SetContentType("application/json")
+
+    // Busca no Banco
+    BeginSQL Alias "TMP"
+        SELECT B1_COD, B1_DESC
+        FROM %Table:SB1%
+        WHERE %NotDel%
+    EndSQL
+
+    // Montagem do JSON
+    While !TMP->(EOF())
+        oItem := JsonObject():New()
+        oItem["codigo"] := TMP->B1_COD
+        oItem["nome"]   := AllTrim(TMP->B1_DESC)
+        
+        aAdd(aProd, oItem)
+        TMP->(DbSkip())
+    EndDo
+    TMP->(DbCloseArea())
+
+    oJson["produtos"] := aProd
+    ::SetResponse(oJson:ToJson())
+
+Return .T.

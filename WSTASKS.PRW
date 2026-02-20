@@ -1,12 +1,6 @@
 #Include 'Totvs.ch'
 #Include 'Restful.ch'
 
-/* ==========================================================================
-   API: WSTASKS
-   DESCRIÇÃO: Gerenciamento de Tarefas com Paginação e CRUD Completo
-   AUTOR: Seu Nome
-   DATA: 14/02/2026
-   ========================================================================== */
 
 WSRESTFUL tasks DESCRIPTION "API de Tarefas Morada"
 
